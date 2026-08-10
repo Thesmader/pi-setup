@@ -47,4 +47,4 @@ pnpm test
 pnpm format:check
 ```
 
-Based on [davis7dotsh/my-pi-setup](https://github.com/davis7dotsh/my-pi-setup), then substantially customized as an independent personal setup.
+Customized from [davis7dotsh/my-pi-setup](https://github.com/davis7dotsh/my-pi-setup)
