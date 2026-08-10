@@ -79,6 +79,21 @@ import { safeStringify, writeFileAtomic } from "./serialization.ts";
 
 const PREVIEW_LENGTH = 200;
 const EMIT_INTERVAL_MS = 120;
+const WORKFLOW_TOOL_NAME = "workflow";
+const WORKFLOW_LOADER_NAME = "load_workflow";
+
+export function initializeWorkflowActiveTools(activeTools: readonly string[]) {
+  return [
+    ...new Set([
+      ...activeTools.filter((tool) => tool !== WORKFLOW_TOOL_NAME),
+      WORKFLOW_LOADER_NAME,
+    ]),
+  ];
+}
+
+export function activateWorkflowTool(activeTools: readonly string[]) {
+  return [...new Set([...activeTools, WORKFLOW_TOOL_NAME])];
+}
 
 const THINKING_LEVELS = [
   "off",
@@ -288,6 +303,7 @@ export default function workflows(pi: ExtensionAPI) {
 
   pi.on("session_start", (_event, ctx) => {
     if (ctx.hasUI) lastUi = ctx.ui;
+    pi.setActiveTools(initializeWorkflowActiveTools(pi.getActiveTools()));
     updateIndicator();
   });
 
@@ -365,7 +381,22 @@ export default function workflows(pi: ExtensionAPI) {
   });
 
   pi.registerTool({
-    name: "workflow",
+    name: WORKFLOW_LOADER_NAME,
+    label: "Load Workflow",
+    description: "Activate the workflow tool for this session.",
+    parameters: Type.Object({}),
+
+    async execute(_toolCallId, _params, _signal, _onUpdate, _ctx) {
+      pi.setActiveTools(activateWorkflowTool(pi.getActiveTools()));
+      return {
+        content: [{ type: "text", text: "Workflow tool ready." }],
+        details: {},
+      };
+    },
+  });
+
+  pi.registerTool({
+    name: WORKFLOW_TOOL_NAME,
     label: "Workflow",
     description: WORKFLOW_TOOL_DESCRIPTION,
     promptSnippet: WORKFLOW_PROMPT_SNIPPET,

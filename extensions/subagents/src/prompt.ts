@@ -1,34 +1,82 @@
 /** All model-facing strings for the subagents tools. */
 
+import type { BackendName } from "./domain.ts";
+
+const BACKEND_LABELS = {
+  pi: "pi (in-process pi session)",
+  claude: "Claude Code",
+  codex: "Codex CLI",
+} as const satisfies Record<BackendName, string>;
+
+function joinLabels(backends: readonly BackendName[]) {
+  const labels = backends.map((backend) => BACKEND_LABELS[backend]);
+  if (labels.length === 1) return labels[0];
+  if (labels.length === 2) return `${labels[0]} or ${labels[1]}`;
+  return `${labels.slice(0, -1).join(", ")}, or ${labels.at(-1)}`;
+}
+
+function modelHints(backends: readonly BackendName[]) {
+  const hints: string[] = [];
+  if (backends.includes("pi")) {
+    hints.push('pi: "provider/model-id" or model id');
+  }
+  if (backends.includes("claude")) {
+    hints.push('Claude Code: model alias like "sonnet" or "opus"');
+  }
+  if (backends.includes("codex")) {
+    hints.push("Codex CLI: model slug");
+  }
+  return hints.join("; ");
+}
+
+function effortHints(backends: readonly BackendName[]) {
+  const hints: string[] = [];
+  if (backends.includes("pi")) hints.push("pi thinking level");
+  if (backends.includes("codex")) hints.push("codex reasoning effort");
+  if (backends.includes("claude")) hints.push("claude thinking budget");
+  return hints.join(", ");
+}
+
 /** Describes subagent_spawn, including harnesses and the fixed concurrency cap. */
-export const SUBAGENT_SPAWN_TOOL_DESCRIPTION =
-  "Spawn a background subagent: a fully autonomous, headless agent with its own context window and the selected harness's normal host permissions. You choose the harness it runs on: pi (in-process pi session, inherits this environment's tools and config), claude (Claude Code), or codex (Codex CLI). Fire-and-forget: this returns immediately with an id. The subagent's final output is queued back to you as a message when it settles, or collect it explicitly with subagent_wait. Children cannot orchestrate more agents/workflows or ask the user, and cannot see this conversation, so the prompt must be self-contained. Only use trusted working directories. Max 4 subagents can be running at once across all harnesses.";
+export function buildSubagentSpawnToolDescription(
+  backends: readonly BackendName[],
+) {
+  return `Spawn a background subagent: a fully autonomous, headless agent with its own context window and the selected harness's normal host permissions. You choose the harness it runs on: ${joinLabels(backends)}. Fire-and-forget: this returns immediately with an id. The subagent's final output is queued back to you as a message when it settles, or collect it explicitly with subagent_wait. Children cannot orchestrate more agents/workflows or ask the user, and cannot see this conversation, so the prompt must be self-contained. Only use trusted working directories. Max 4 subagents can be running at once across all harnesses.`;
+}
 
 /** Adds background subagent delegation to the parent model's available-tools prompt. */
-export const SUBAGENT_SPAWN_PROMPT_SNIPPET =
-  "Spawn a background subagent on a chosen harness (pi, Claude Code, or Codex; own context, normal tools) for a self-contained task";
+export function buildSubagentSpawnPromptSnippet(
+  backends: readonly BackendName[],
+) {
+  return `Spawn a background subagent on ${joinLabels(backends)} for a self-contained task`;
+}
 
 /** Guides the parent model to delegate standalone tasks and avoid unnecessary blocking waits. */
-export const SUBAGENT_SPAWN_PROMPT_GUIDELINES = [
-  "Use subagent_spawn to delegate self-contained tasks that can run in the background; give it a complete, standalone prompt.",
-  "Pick the subagent harness deliberately: pi unless you have a reason to prefer Claude Code or Codex (e.g. the user asked for one, or the task suits that harness).",
-  "After subagent_spawn, keep working; results arrive automatically. Only call subagent_wait when you cannot proceed without the result.",
-];
+export function buildSubagentSpawnPromptGuidelines(
+  backends: readonly BackendName[],
+) {
+  return [
+    "Use subagent_spawn to delegate self-contained tasks that can run in the background; give it a complete, standalone prompt.",
+    `Pick the subagent harness deliberately: ${joinLabels(backends)}.`,
+    "After subagent_spawn, keep working; results arrive automatically. Only call subagent_wait when you cannot proceed without the result.",
+  ];
+}
 
 /** Model-facing schema descriptions for subagent_spawn task and execution options. */
-export const SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS = {
-  prompt:
-    "Task prompt for the subagent. Must be self-contained: include all needed context, file paths, and what to report back.",
-  name: "Short human-readable name for this subagent, shown in listings and the UI",
-  harness:
-    'Harness to run the subagent on: "pi" (in-process pi session; inherits this environment), "claude" (Claude Code), or "codex" (Codex CLI). Choose deliberately per task.',
-  workingDir:
-    "Trusted working directory for the autonomous child (default: current working directory)",
-  model:
-    'Model hint, interpreted by the chosen harness (pi: "provider/model-id" or model id; claude: model alias like "sonnet"/"opus"; codex: model slug). Omit for the harness default (pi inherits the current model).',
-  reasoningEffort:
-    "Reasoning effort on a shared scale; the harness maps it to its nearest native equivalent (pi thinking level, codex reasoning effort, claude thinking budget). Omit for the harness default (pi inherits the current level).",
-};
+export function buildSubagentSpawnParameterDescriptions(
+  backends: readonly BackendName[],
+) {
+  return {
+    prompt:
+      "Task prompt for the subagent. Must be self-contained: include all needed context, file paths, and what to report back.",
+    name: "Short human-readable name for this subagent, shown in listings and the UI",
+    harness: `Harness to run the subagent on: ${joinLabels(backends)}. Choose deliberately per task.`,
+    workingDir:
+      "Trusted working directory for the autonomous child (default: current working directory)",
+    model: `Model hint, interpreted by the chosen harness (${modelHints(backends)}). Omit for the harness default.`,
+    reasoningEffort: `Reasoning effort on a shared scale; the harness maps it to its nearest native equivalent (${effortHints(backends)}). Omit for the harness default.`,
+  };
+}
 
 /** Builds the subagent_spawn result that tells the parent model how to continue or inspect the child. */
 export function buildSubagentSpawnResult(options: {

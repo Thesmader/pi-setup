@@ -13,19 +13,62 @@ import { codexBackend } from "./backends/codex.ts";
 import { piBackend } from "./backends/pi.ts";
 import type { BackendName } from "./domain.ts";
 
-const BackendRegistryLive = Layer.sync(BackendRegistry, () => {
-  const backends: SubagentBackend[] = [piBackend, claudeBackend, codexBackend];
-  return new Map<BackendName, SubagentBackend>(
-    backends.map((backend) => [backend.name, backend]),
-  );
-});
+const ALL_BACKENDS = {
+  pi: piBackend,
+  claude: claudeBackend,
+  codex: codexBackend,
+} satisfies Record<BackendName, SubagentBackend>;
+
+const DEFAULT_BACKENDS = [
+  "pi",
+  "codex",
+] as const satisfies readonly BackendName[];
+
+export function parseEnabledBackendNames(
+  value = process.env.PI_SUBAGENT_BACKENDS,
+) {
+  if (value === undefined) return [...DEFAULT_BACKENDS];
+  const names = value.split(",").map((part) => part.trim());
+  if (names.length === 0 || names.some((name) => name === "")) {
+    throw new Error(
+      `Invalid PI_SUBAGENT_BACKENDS value ${JSON.stringify(value)}: use a comma-separated list from pi, codex, claude.`,
+    );
+  }
+  const enabled: BackendName[] = [];
+  const seen = new Set<BackendName>();
+  for (const name of names) {
+    if (!(name in ALL_BACKENDS)) {
+      throw new Error(
+        `Invalid PI_SUBAGENT_BACKENDS value ${JSON.stringify(value)}: unknown backend ${JSON.stringify(name)}. Use pi, codex, claude.`,
+      );
+    }
+    const backendName = name as BackendName;
+    if (seen.has(backendName)) {
+      throw new Error(
+        `Invalid PI_SUBAGENT_BACKENDS value ${JSON.stringify(value)}: duplicate backend ${JSON.stringify(name)}.`,
+      );
+    }
+    seen.add(backendName);
+    enabled.push(backendName);
+  }
+  return enabled;
+}
+
+function createBackendRegistry(backends: readonly SubagentBackend[]) {
+  return Layer.sync(BackendRegistry, () => {
+    const registry = new Map<BackendName, SubagentBackend>();
+    for (const backend of backends) registry.set(backend.name, backend);
+    return registry;
+  });
+}
 
 import { SubagentManagerLive } from "./manager.ts";
 
-const AppLayer = SubagentManagerLive.pipe(Layer.provide(BackendRegistryLive));
-
 export function createSubagentRuntime() {
-  return ManagedRuntime.make(AppLayer);
+  const backends = parseEnabledBackendNames().map((name) => ALL_BACKENDS[name]);
+  return ManagedRuntime.make(
+    SubagentManagerLive.pipe(Layer.provide(createBackendRegistry(backends))),
+  );
 }
 
 export type SubagentRuntime = ReturnType<typeof createSubagentRuntime>;

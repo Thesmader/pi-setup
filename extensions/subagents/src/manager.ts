@@ -444,7 +444,7 @@ const makeManager = Effect.gen(function* () {
         const backend: SubagentBackend | undefined = registry.get(backendName);
         if (!backend) {
           return yield* new BackendUnavailableError({
-            message: `Unknown backend "${backendName}".`,
+            message: `Backend "${backendName}" is not enabled or available in this session.`,
           });
         }
         const available = yield* backend.available;

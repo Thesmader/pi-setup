@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
+  "name": "kanagawa-wave",
+  "vars": {
+    "bg": "#1f1f28", "surface": "#090618", "muted": "#dcd7ba", "text": "#dcd7ba",
+    "blue": "#7e9cd8", "cyan": "#7fb4ca", "green": "#98bb6c", "yellow": "#e6c384",
+    "pink": "#938aa9", "purple": "#957fb8", "orange": "#c0a36e", "red": "#c34043",
+    "line": "#727169", "select": "#090618"
+  },
+  "colors": {
+    "accent": "blue", "border": "cyan", "borderAccent": "blue", "borderMuted": "line", "success": "green", "error": "red", "warning": "orange", "muted": "muted", "dim": "muted", "text": "text", "thinkingText": "purple",
+    "selectedBg": "select", "userMessageBg": "surface", "userMessageText": "text", "customMessageBg": "bg", "customMessageText": "text", "customMessageLabel": "purple", "toolPendingBg": "surface", "toolSuccessBg": "surface", "toolErrorBg": "surface", "toolTitle": "text", "toolOutput": "text",
+    "mdHeading": "yellow", "mdLink": "blue", "mdLinkUrl": "muted", "mdCode": "orange", "mdCodeBlock": "green", "mdCodeBlockBorder": "line", "mdQuote": "text", "mdQuoteBorder": "cyan", "mdHr": "line", "mdListBullet": "pink",
+    "toolDiffAdded": "green", "toolDiffRemoved": "red", "toolDiffContext": "muted",
+    "syntaxComment": "muted", "syntaxKeyword": "purple", "syntaxFunction": "blue", "syntaxVariable": "text", "syntaxString": "green", "syntaxNumber": "pink", "syntaxType": "cyan", "syntaxOperator": "orange", "syntaxPunctuation": "text",
+    "thinkingOff": "line", "thinkingMinimal": "cyan", "thinkingLow": "blue", "thinkingMedium": "blue", "thinkingHigh": "purple", "thinkingXhigh": "pink", "bashMode": "yellow"
+  }
+}

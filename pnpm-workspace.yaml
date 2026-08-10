@@ -1,0 +1,7 @@
+packages:
+  - extensions/*
+
+allowBuilds:
+  "@google/genai": false
+  msgpackr-extract: false
+  protobufjs: false

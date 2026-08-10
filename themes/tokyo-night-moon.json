@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
+  "name": "tokyo-night-moon",
+  "vars": {
+    "bg": "#222436", "surface": "#1b1d2b", "overlay": "#444a73", "muted": "#c8d3f5", "text": "#c8d3f5",
+    "blue": "#82aaff", "cyan": "#86e1fc", "green": "#c3e88d", "purple": "#c099ff", "orange": "#ffc777", "red": "#ff757f", "teal": "#86e1fc", "yellow": "#ffc777",
+    "select": "#2d3f76"
+  },
+  "colors": {
+    "accent": "blue", "border": "teal", "borderAccent": "blue", "borderMuted": "overlay", "success": "green", "error": "red", "warning": "yellow", "muted": "muted", "dim": "muted", "text": "text", "thinkingText": "purple",
+    "selectedBg": "select", "userMessageBg": "surface", "userMessageText": "text", "customMessageBg": "bg", "customMessageText": "text", "customMessageLabel": "purple", "toolPendingBg": "surface", "toolSuccessBg": "surface", "toolErrorBg": "surface", "toolTitle": "text", "toolOutput": "text",
+    "mdHeading": "yellow", "mdLink": "blue", "mdLinkUrl": "muted", "mdCode": "orange", "mdCodeBlock": "green", "mdCodeBlockBorder": "overlay", "mdQuote": "text", "mdQuoteBorder": "teal", "mdHr": "overlay", "mdListBullet": "purple",
+    "toolDiffAdded": "green", "toolDiffRemoved": "red", "toolDiffContext": "muted",
+    "syntaxComment": "muted", "syntaxKeyword": "purple", "syntaxFunction": "blue", "syntaxVariable": "text", "syntaxString": "green", "syntaxNumber": "orange", "syntaxType": "cyan", "syntaxOperator": "yellow", "syntaxPunctuation": "text",
+    "thinkingOff": "overlay", "thinkingMinimal": "teal", "thinkingLow": "cyan", "thinkingMedium": "blue", "thinkingHigh": "purple", "thinkingXhigh": "red", "bashMode": "yellow"
+  }
+}

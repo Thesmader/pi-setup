@@ -1,24 +1,25 @@
 # Dependencies
 node_modules/
+.pnpm-store/
 
-# Downloaded/generated executables
+# Downloaded/generated integrations and executables
 bin/
+extensions/herdr-agent-state.ts
+resources/herdr/
 
 # Pi runtime and private state
 sessions/
 /workflows/
 auth.json
 settings.json
+openai-codex-accounts.json
 trust.json
 models.json
 models-store.json
-extensions/summaries/config.private.json
-extensions/summaries/config.private.json.*.tmp
 
 # Environment variables and secrets
 .env
 .env.*
-!.env.example
 *.pem
 *.key
 

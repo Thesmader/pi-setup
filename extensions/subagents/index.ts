@@ -1,5 +1,5 @@
 /**
- * Subagents — spawn background subagents on one of three backends
+ * Subagents — spawn background subagents on the enabled backends
  * (pi, Claude Code, Codex) unified behind a single Effect service interface.
  *
  * Tools (for the parent LLM):
@@ -15,7 +15,7 @@
  *
  * Architecture: Effect v4 generators throughout (backends -> manager ->
  * runtime); this file is the async boundary where tool handlers run effects
- * against one shared ManagedRuntime. All three backends are real: pi runs
+ * against one shared ManagedRuntime. Backends are real: pi runs
  * in-process SDK sessions, claude drives the Claude Agent SDK, codex speaks
  * JSON-RPC to a scoped `codex app-server` process.
  */
@@ -42,7 +42,6 @@ import { Markdown, Text } from "@earendil-works/pi-tui";
 import { Type } from "typebox";
 import { deriveBtwTitle, isModelVisible } from "./src/by-the-way.ts";
 import {
-  BACKEND_NAMES,
   formatElapsed,
   latestText,
   REASONING_EFFORTS,
@@ -55,27 +54,31 @@ import {
 import { SubagentManager, type SubagentManagerShape } from "./src/manager.ts";
 import {
   buildSubagentResultMessage,
+  buildSubagentSpawnParameterDescriptions,
+  buildSubagentSpawnPromptGuidelines,
+  buildSubagentSpawnPromptSnippet,
+  buildSubagentSpawnToolDescription,
   buildSubagentSpawnResult,
   SUBAGENT_CANCEL_PARAMETER_DESCRIPTIONS,
   SUBAGENT_CANCEL_TOOL_DESCRIPTION,
   SUBAGENT_CHECK_PARAMETER_DESCRIPTIONS,
   SUBAGENT_CHECK_TOOL_DESCRIPTION,
   SUBAGENT_LIST_TOOL_DESCRIPTION,
-  SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS,
-  SUBAGENT_SPAWN_PROMPT_GUIDELINES,
-  SUBAGENT_SPAWN_PROMPT_SNIPPET,
-  SUBAGENT_SPAWN_TOOL_DESCRIPTION,
   SUBAGENT_WAIT_PARAMETER_DESCRIPTIONS,
   SUBAGENT_WAIT_TOOL_DESCRIPTION,
 } from "./src/prompt.ts";
 import { createDeferredResultDelivery } from "./src/result-delivery.ts";
 import {
   createSubagentRuntime,
+  parseEnabledBackendNames,
   runTool,
   type SubagentRuntime,
 } from "./src/runtime.ts";
 import { openSubagentPicker, openSubagentTakeover } from "./src/ui/takeover.ts";
 
+const enabledBackendNames = parseEnabledBackendNames();
+const subagentSpawnDescriptions =
+  buildSubagentSpawnParameterDescriptions(enabledBackendNames);
 const SUBAGENT_OUTPUT_MAX_BYTES = 24 * 1024;
 const WAIT_OUTPUT_MAX_BYTES = 48 * 1024;
 const WAIT_PER_AGENT_MAX_BYTES = 16 * 1024;
@@ -267,32 +270,32 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "subagent_spawn",
     label: "Spawn Subagent",
-    description: SUBAGENT_SPAWN_TOOL_DESCRIPTION,
-    promptSnippet: SUBAGENT_SPAWN_PROMPT_SNIPPET,
-    promptGuidelines: SUBAGENT_SPAWN_PROMPT_GUIDELINES,
+    description: buildSubagentSpawnToolDescription(enabledBackendNames),
+    promptSnippet: buildSubagentSpawnPromptSnippet(enabledBackendNames),
+    promptGuidelines: buildSubagentSpawnPromptGuidelines(enabledBackendNames),
     parameters: Type.Object({
       prompt: Type.String({
-        description: SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS.prompt,
+        description: subagentSpawnDescriptions.prompt,
       }),
       name: Type.String({
-        description: SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS.name,
+        description: subagentSpawnDescriptions.name,
       }),
-      harness: StringEnum(BACKEND_NAMES, {
-        description: SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS.harness,
+      harness: StringEnum(enabledBackendNames, {
+        description: subagentSpawnDescriptions.harness,
       }),
       working_dir: Type.Optional(
         Type.String({
-          description: SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS.workingDir,
+          description: subagentSpawnDescriptions.workingDir,
         }),
       ),
       model: Type.Optional(
         Type.String({
-          description: SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS.model,
+          description: subagentSpawnDescriptions.model,
         }),
       ),
       reasoning_effort: Type.Optional(
         StringEnum(REASONING_EFFORTS, {
-          description: SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS.reasoningEffort,
+          description: subagentSpawnDescriptions.reasoningEffort,
         }),
       ),
     }),

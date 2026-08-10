@@ -1,3 +1,9 @@
-- run check/format/lint commands when your done making a change. if they don't exist, suggest making them for the project you're in
-- avoid explicit return types unless absolutely needed
-- `as any` should be an absolute last resort. always use real type safety. lean on type inference instead of manually writing new types over and over again
+- read the real flow before editing; trace callers, shared helpers, and existing patterns first
+- prefer YAGNI, reuse, stdlib/native features, and already-installed deps before adding code or packages
+- fix root causes in the shared path; do not patch one symptom when a common guard is smaller
+- keep the diff tiny: fewest files, least code, no speculative abstractions, no boilerplate
+- never remove security, validation, accessibility, or data-loss safeguards
+- avoid explicit return types unless needed; prefer inference; `as any` only as a last resort
+- for non-trivial logic, leave one small runnable check
+- run the relevant check/format/test commands when done; if missing, say so
+- keep PR workflow concise; use the create-pull-request skill when asked to open a PR

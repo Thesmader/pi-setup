@@ -5,7 +5,7 @@ description: invoke this skill when the user asks you to use subagents
 
 # Subagents
 
-Each subagent is headless, has its own context window, cannot see the parent conversation, cannot ask the user, and cannot spawn subagents or workflows. Give every child a self-contained prompt with paths, constraints, and the expected report.
+Each subagent is headless, has its own context window, cannot see the parent conversation, cannot ask the user, and cannot spawn subagents or workflows. Give every child a self-contained prompt with paths, constraints, and the expected report. Default backends are `pi,codex`; set `PI_SUBAGENT_BACKENDS` to add `claude` when needed.
 
 ## Pi Harness
 
@@ -26,7 +26,7 @@ Pi can use any model shown by `pi --list-models`. Prefer `provider/model-id`; a 
 
 **Thinking budgets:** `off`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`. These map directly to pi thinking levels.
 
-## Claude Code Harness
+## Claude Code Harness (enabled only when `PI_SUBAGENT_BACKENDS` includes `claude`)
 
 **Harness:** `claude`
 **Prompt nicknames:** “claude”, “Claude Code”, “claude agent”, “claude subagent”, "cc"
@@ -37,6 +37,8 @@ Pi can use any model shown by `pi --list-models`. Prefer `provider/model-id`; a 
 | `fable`    | latest Claude Fable | `high`             |
 
 **Thinking budgets:** `off`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`. The extension maps these to Claude thinking-token budgets: 0, 1,024, 4,096, 10,000, 16,000, 32,000, and 63,999 tokens respectively.
+
+Disabled by default.
 
 Requires Claude Code to be installed and authenticated.
 
@@ -58,7 +60,7 @@ Requires the Codex CLI to be installed and authenticated.
 
 ## Spawn and Manage
 
-Call `subagent_spawn` with a complete `prompt`, short `name`, chosen `harness`, and optional `working_dir`, `model`, and `reasoning_effort`. At most four subagents run concurrently.
+Call `subagent_spawn` with a complete `prompt`, short `name`, chosen enabled `harness`, and optional `working_dir`, `model`, and `reasoning_effort`. At most four subagents run concurrently.
 
 - `subagent_check({ id })`: peek without blocking.
 - `subagent_list()`: list all runs.

@@ -1,0 +1,16 @@
+{
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-sol",
+  "defaultThinkingLevel": "medium",
+  "theme": "tokyo-night-moon",
+  "tuiMode": "fullscreen",
+  "packages": [
+    "npm:pi-vim",
+    "npm:pi-web-access",
+    "npm:pi-codex-search",
+    "npm:@ff-labs/pi-fff"
+  ],
+  "steeringMode": "all",
+  "followUpMode": "one-at-a-time",
+  "transport": "auto"
+}
