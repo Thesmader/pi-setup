@@ -17,11 +17,13 @@ Call `bg_start` with:
 
 Background commands receive no stdin. Never use them for interactive prompts.
 
-After starting, continue useful work instead of polling. The terminal sends one completion message when it exits.
+After starting, continue useful work. The terminal sends one completion message when it exits.
+
+If no useful parent work remains, end the current turn. For a finite command, let automatic result delivery resume the conversation when it exits. For an indefinite server or watcher, report that it is running and let the user continue when needed. Do not poll merely to keep the turn active.
 
 ## Inspect and stop
 
-- Use `bg_status` only when current output or status is needed.
+- Use `bg_status` only when current output is needed for a decision, a readiness signal must be observed, expected completion has passed, or failure is suspected. Do not use it as a heartbeat.
 - Use `bg_list` to inventory all tracked terminals.
 - Use `bg_kill` when a process is no longer needed or is stuck; termination continues even if the tool wait is aborted.
 - Tell the user they can open `/ps` to inspect live output and kill terminals interactively.
