@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
+  "name": "token-flint-dark",
+  "vars": {
+    "bg1": "#1C2127", "bg2": "#22272E", "bg5": "#373E47",
+    "fg0": "#C3C8CC", "fg1": "#A2A9AF", "fg2": "#9AA4AE", "fg3": "#858F9B",
+    "accent": "#EB9E83", "accent2": "#F8D28A", "blue": "#88ACC4", "green": "#A9B98C", "red": "#E3888C", "yellow": "#C5A15A", "purple": "#E09478", "cyan": "#98BBD4", "orange": "#9DAD7F",
+    "sel": "#3A414A", "match": "#4A402E", "diffAdd": "#2B332B", "diffDel": "#39282C"
+  },
+  "colors": {
+    "accent": "accent", "border": "fg3", "borderAccent": "accent", "borderMuted": "bg5", "success": "green", "error": "red", "warning": "yellow", "muted": "fg2", "dim": "fg3", "text": "fg0", "thinkingText": "fg2",
+    "selectedBg": "sel", "scrollbarTrack": "bg5", "scrollbarThumb": "fg2", "searchMatchBg": "match", "searchMatchText": "fg0",
+    "userMessageBg": "bg2", "userMessageText": "fg0", "customMessageBg": "bg1", "customMessageText": "fg0", "customMessageLabel": "purple",
+    "toolPendingBg": "bg2", "toolSuccessBg": "diffAdd", "toolErrorBg": "diffDel", "toolTitle": "accent", "toolOutput": "fg1",
+    "mdHeading": "accent2", "mdLink": "blue", "mdLinkUrl": "fg3", "mdCode": "orange", "mdCodeBlock": "fg0", "mdCodeBlockBorder": "fg3", "mdQuote": "fg2", "mdQuoteBorder": "cyan", "mdHr": "fg3", "mdListBullet": "accent",
+    "toolDiffAdded": "green", "toolDiffRemoved": "red", "toolDiffContext": "fg2",
+    "syntaxComment": "fg2", "syntaxKeyword": "#f8c88f", "syntaxFunction": "#e89a49", "syntaxVariable": "#c9c0b1", "syntaxString": "#8cbb62", "syntaxNumber": "#de88a6", "syntaxType": "#66abc6", "syntaxOperator": "#aba195", "syntaxPunctuation": "#aba195",
+    "thinkingOff": "fg3", "thinkingMinimal": "cyan", "thinkingLow": "blue", "thinkingMedium": "green", "thinkingHigh": "purple", "thinkingXhigh": "red", "thinkingMax": "accent", "bashMode": "yellow"
+  },
+  "export": { "pageBg": "#161B20", "cardBg": "#1C2127", "infoBg": "#30363E" }
+}
