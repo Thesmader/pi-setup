@@ -1,6 +1,10 @@
 - read the real flow before editing; trace callers, shared helpers, and existing patterns first
 - prefer YAGNI, reuse, stdlib/native features, and already-installed deps before adding code or packages
 - fix root causes in the shared path; do not patch one symptom when a common guard is smaller
+- once you find a root cause (a shared flag, condition or rule), list everything else it affects and decide each against the task's goal, not the step's wording; check what the backend/source of truth allows before calling any of them in or out
+- before scoping, walk the goal end to end as each person involved; note where they would still be blocked after your change
+- never defer quietly: whatever you find and leave out goes in your summary as an open question with evidence (what is blocked, what the backend allows, how small the change is)
+- before calling it done, re-read the goal and ask what the user will hit next
 - keep the diff tiny: fewest files, least code, no speculative abstractions, no boilerplate
 - never remove security, validation, accessibility, or data-loss safeguards
 - avoid explicit return types unless needed; prefer inference; `as any` only as a last resort
